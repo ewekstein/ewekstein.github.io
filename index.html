@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elijah Wekstein — Sports Analytics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #0a0a0a;
+      --white: #ffffff;
+      --off-white: #f5f4f0;
+      --blue: #1a56db;
+      --blue-light: #e8f0fe;
+      --blue-mid: #4f7df0;
+      --gray: #6b6b6b;
+      --border: rgba(0,0,0,0.08);
+      --border-strong: rgba(0,0,0,0.15);
+      --radius: 4px;
+      --radius-lg: 12px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--white);
+      color: var(--black);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      background: var(--black);
+      color: var(--white);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 80% 50%, rgba(26,86,219,0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 60% at 10% 80%, rgba(26,86,219,0.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+
+    /* NAV */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.75rem 3rem;
+      position: relative;
+      z-index: 10;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      letter-spacing: 0.12em;
+      color: var(--white);
+    }
+
+    .logo span { color: var(--blue-mid); }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 13px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.55);
+      letter-spacing: 0.04em;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--white); }
+
+    /* HERO CONTENT */
+    .hero-body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 4rem 3rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--blue-mid);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 1px;
+      background: var(--blue-mid);
+    }
+
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(64px, 10vw, 130px);
+      line-height: 0.92;
+      letter-spacing: 0.02em;
+      color: var(--white);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: transparent;
+      -webkit-text-stroke: 1.5px rgba(255,255,255,0.35);
+    }
+
+    .hero-sub {
+      font-size: 17px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.55);
+      max-width: 480px;
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 11px 20px;
+      border-radius: var(--radius);
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.02em;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: var(--white);
+      border: 1px solid var(--blue);
+    }
+
+    .btn-primary:hover {
+      background: #1648c4;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(26,86,219,0.35);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: rgba(255,255,255,0.7);
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255,255,255,0.06);
+      color: var(--white);
+      border-color: rgba(255,255,255,0.3);
+    }
+
+    /* HERO STATS */
+    .hero-stats {
+      display: flex;
+      gap: 3rem;
+      padding: 2rem 3rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      position: relative;
+      z-index: 10;
+    }
+
+    .stat-item { }
+
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 32px;
+      letter-spacing: 0.05em;
+      color: var(--white);
+      line-height: 1;
+    }
+
+    .stat-num span { color: var(--blue-mid); }
+
+    .stat-label {
+      font-size: 11px;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* ── PROJECTS SECTION ── */
+    #projects {
+      background: var(--off-white);
+      padding: 6rem 3rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    .section-tag {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--blue);
+    }
+
+    .section-title {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 36px;
+      font-weight: 400;
+      color: var(--black);
+      font-style: italic;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5px;
+      background: var(--border-strong);
+      border: 1.5px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .project-card {
+      background: var(--white);
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-card:hover { background: #fafafa; }
+
+    .project-card:hover .card-img-overlay { opacity: 1; }
+    .project-card:hover .card-arrow { transform: translate(3px, -3px); }
+
+    .card-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(20%);
+      transition: filter 0.3s, transform 0.4s;
+    }
+
+    .project-card:hover .card-img {
+      filter: grayscale(0%);
+      transform: scale(1.03);
+    }
+
+    .card-img-wrap {
+      overflow: hidden;
+      position: relative;
+      height: 180px;
+    }
+
+    .card-img-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(26,86,219,0.15), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .card-sport-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: var(--black);
+      color: var(--white);
+      padding: 4px 10px;
+      border-radius: 2px;
+    }
+
+    .card-body {
+      padding: 1.25rem 1.5rem 1.5rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+
+    .card-date {
+      font-size: 11px;
+      color: var(--gray);
+      letter-spacing: 0.05em;
+    }
+
+    .card-arrow {
+      font-size: 18px;
+      color: var(--blue);
+      transition: transform 0.2s;
+      line-height: 1;
+    }
+
+    .card-title {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.4;
+      margin-bottom: 0.6rem;
+      color: var(--black);
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: var(--gray);
+      line-height: 1.65;
+      margin-bottom: 1.25rem;
+      flex: 1;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 2px;
+      background: var(--blue-light);
+      color: var(--blue);
+    }
+
+    /* ── ABOUT ── */
+    #about {
+      padding: 6rem 3rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+      background: var(--white);
+      border-top: 1px solid var(--border);
+    }
+
+    .about-left { }
+
+    .about-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 1rem;
+    }
+
+    .about-left h2 {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 38px;
+      font-weight: 400;
+      line-height: 1.2;
+      margin-bottom: 1.5rem;
+      font-style: italic;
+    }
+
+    .about-left p {
+      font-size: 15px;
+      color: var(--gray);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+
+    .about-right { }
+
+    .skills-section-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .skill-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .skill-name {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .skill-pills {
+      display: flex;
+      gap: 6px;
+    }
+
+    .skill-pill {
+      font-size: 11px;
+      padding: 3px 9px;
+      border-radius: 99px;
+      background: var(--off-white);
+      color: var(--gray);
+      border: 1px solid var(--border-strong);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--black);
+      color: var(--white);
+      padding: 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .footer-left { }
+
+    .footer-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.4rem;
+    }
+
+    .footer-logo span { color: var(--blue-mid); }
+
+    .footer-sub {
+      font-size: 12px;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .footer-links a {
+      font-size: 13px;
+      color: rgba(255,255,255,0.45);
+      transition: color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .footer-links a:hover { color: var(--white); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-eyebrow { animation: fadeUp 0.6s ease both; }
+    .hero h1 { animation: fadeUp 0.6s 0.1s ease both; }
+    .hero-sub { animation: fadeUp 0.6s 0.2s ease both; }
+    .hero-actions { animation: fadeUp 0.6s 0.3s ease both; }
+    .hero-stats { animation: fadeUp 0.6s 0.4s ease both; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 1.5rem; }
+      .hero-body { padding: 3rem 1.5rem; }
+      .hero-stats { padding: 1.5rem; gap: 2rem; }
+      #projects { padding: 4rem 1.5rem; }
+      .projects-grid { grid-template-columns: 1fr; }
+      #about { grid-template-columns: 1fr; padding: 4rem 1.5rem; gap: 3rem; }
+      footer { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-grid"></div>
+
+    <nav>
+      <div class="logo">Elijah <span>Wekstein</span></div>
+      <ul class="nav-links">
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="mailto:ewekstein@gmail.com">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="hero-body">
+      <div class="hero-eyebrow">Sports Analytics</div>
+      <h1>Data Meets<br><em>The Game</em></h1>
+      <p class="hero-sub">CU Boulder graduate in Business Analytics & Information Management — building models, dashboards, and data stories at the intersection of sports and numbers.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#projects">View Projects</a>
+        <a class="btn btn-ghost" href="https://www.linkedin.com/in/elijah-wekstein" target="_blank">LinkedIn</a>
+        <a class="btn btn-ghost" href="https://github.com/ewekstein" target="_blank">GitHub</a>
+        <a class="btn btn-ghost" href="Elijah_Wekstein_Resume.pdf" target="_blank">Resume</a>
+      </div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">3<span>+</span></div>
+        <div class="stat-label">Projects Published</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">3<span>+</span></div>
+        <div class="stat-label">Sports Covered</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">CU<span>.</span></div>
+        <div class="stat-label">Leeds School of Business</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="section-header">
+      <span class="section-tag">Featured Work</span>
+      <h2 class="section-title">Projects & Analysis</h2>
+    </div>
+
+    <div class="projects-grid">
+
+      <!-- NFL -->
+      <a class="project-card" href="https://www.linkedin.com/pulse/breaking-down-2025-nfl-season-efficiency-play-calling-elijah-wekstein-ehowc" target="_blank">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://upload.wikimedia.org/wikipedia/en/thumb/a/a2/National_Football_League_logo.svg/200px-National_Football_League_logo.svg.png"
+            onerror="this.style.background='#0a0a0a'; this.style.height='180px'; this.removeAttribute('src');"
+            alt="NFL" style="object-fit: contain; background: #0a0a0a; padding: 2rem;" />
+          <div class="card-img-overlay"></div>
+          <div class="card-sport-badge">NFL</div>
+        </div>
+        <div class="card-body">
+          <div class="card-top">
+            <span class="card-date">2025 Season</span>
+            <span class="card-arrow">↗</span>
+          </div>
+          <div class="card-title">Breaking Down the 2025 NFL Season</div>
+          <div class="card-desc">Efficiency, play calling tendencies, red zone finishing, and clutch performance across the full 2025 regular season using nflverse play-by-play data.</div>
+          <div class="card-tags">
+            <span class="tag">Python</span>
+            <span class="tag">EPA</span>
+            <span class="tag">Play Calling</span>
+            <span class="tag">nflverse</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- NBA -->
+      <a class="project-card" href="https://www.linkedin.com/pulse/paid-produce-measuring-true-nba-player-value-against-2025-26-elijah-3nptc" target="_blank">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://upload.wikimedia.org/wikipedia/en/thumb/0/03/National_Basketball_Association_logo.svg/200px-National_Basketball_Association_logo.svg.png"
+            onerror="this.style.background='#17408b'; this.style.height='180px'; this.removeAttribute('src');"
+            alt="NBA" style="object-fit: contain; background: #17408b; padding: 2rem;" />
+          <div class="card-img-overlay"></div>
+          <div class="card-sport-badge">NBA</div>
+        </div>
+        <div class="card-body">
+          <div class="card-top">
+            <span class="card-date">2025–26 Season</span>
+            <span class="card-arrow">↗</span>
+          </div>
+          <div class="card-title">Paid to Produce: NBA Player Value vs. Salary</div>
+          <div class="card-desc">Measuring true NBA player value against the 2025–26 salary landscape using VORP to identify the league's most over and underpaid contracts.</div>
+          <div class="card-tags">
+            <span class="tag">R</span>
+            <span class="tag">VORP</span>
+            <span class="tag">Salaries</span>
+            <span class="tag">ggplot2</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- RED SOX -->
+      <a class="project-card" href="https://www.linkedin.com/pulse/what-actually-fills-fenway-data-look-2025-red-sox-elijah-wekstein-hwwuc" target="_blank">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://upload.wikimedia.org/wikipedia/en/thumb/6/6d/RedSoxPrimary_HangingSocks.svg/200px-RedSoxPrimary_HangingSocks.svg.png"
+            onerror="this.style.background='#bd3039'; this.style.height='180px'; this.removeAttribute('src');"
+            alt="Red Sox" style="object-fit: contain; background: #0d2b56; padding: 2rem;" />
+          <div class="card-img-overlay"></div>
+          <div class="card-sport-badge">MLB</div>
+        </div>
+        <div class="card-body">
+          <div class="card-top">
+            <span class="card-date">2025 Season</span>
+            <span class="card-arrow">↗</span>
+          </div>
+          <div class="card-title">What Actually Fills Fenway: 2025 Red Sox</div>
+          <div class="card-desc">A data look at the factors driving attendance at Fenway Park — day of week, matchup quality, playoff probability, and momentum across the 2025 season.</div>
+          <div class="card-tags">
+            <span class="tag">Excel</span>
+            <span class="tag">Tableau</span>
+            <span class="tag">Attendance</span>
+            <span class="tag">MLB</span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="about-left">
+      <div class="about-label">About Me</div>
+      <h2>Finding the story<br>in the numbers</h2>
+      <p>I'm Elijah Wekstein, a recent graduate from CU Boulder's Leeds School of Business with a degree in Business Administration focused on Data Analytics and Information Management.</p>
+      <p>I'm passionate about applying quantitative methods to sports — building models and visualizations that turn raw data into real decisions. Based between Boston, MA and Boulder, CO.</p>
+      <div style="margin-top: 1.5rem;">
+        <a class="btn btn-primary" href="Elijah_Wekstein_Resume.pdf" target="_blank" style="display: inline-flex;">View Resume</a>
+      </div>
+    </div>
+    <div class="about-right">
+      <div class="skills-section-label">Tools & Skills</div>
+      <div class="skill-row">
+        <span class="skill-name">Languages</span>
+        <div class="skill-pills">
+          <span class="skill-pill">Python</span>
+          <span class="skill-pill">R</span>
+          <span class="skill-pill">SQL</span>
+        </div>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">Visualization</span>
+        <div class="skill-pills">
+          <span class="skill-pill">Tableau</span>
+          <span class="skill-pill">ggplot2</span>
+          <span class="skill-pill">matplotlib</span>
+        </div>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">Analytics</span>
+        <div class="skill-pills">
+          <span class="skill-pill">Excel</span>
+          <span class="skill-pill">Alteryx</span>
+        </div>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">Sports Data</span>
+        <div class="skill-pills">
+          <span class="skill-pill">nflfastR</span>
+          <span class="skill-pill">hoopR</span>
+          <span class="skill-pill">baseballr</span>
+        </div>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">Python Libraries</span>
+        <div class="skill-pills">
+          <span class="skill-pill">pandas</span>
+          <span class="skill-pill">numpy</span>
+        </div>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">Version Control</span>
+        <div class="skill-pills">
+          <span class="skill-pill">Git</span>
+          <span class="skill-pill">GitHub</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-left">
+      <div class="footer-logo">Elijah <span>Wekstein</span></div>
+      <div class="footer-sub">ewekstein@gmail.com &nbsp;·&nbsp; Boston, MA / Boulder, CO</div>
+    </div>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/elijah-wekstein" target="_blank">↗ LinkedIn</a>
+      <a href="https://github.com/ewekstein" target="_blank">↗ GitHub</a>
+      <a href="mailto:ewekstein@gmail.com">↗ Email</a>
+    </div>
+  </footer>
+
+</body>
+</html>
