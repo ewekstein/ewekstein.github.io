@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elijah Wekstein - Sports Analytics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0b0b0f;
+      --bg-card: #131318;
+      --bg-elevated: #1a1a22;
+      --white: #f0f0f0;
+      --white-dim: rgba(240,240,240,0.55);
+      --white-faint: rgba(240,240,240,0.12);
+      --blue: #3b82f6;
+      --blue-glow: rgba(59,130,246,0.15);
+      --blue-bright: #60a5fa;
+      --green: #34d399;
+      --radius: 6px;
+      --radius-lg: 14px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--white);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 2.5rem; }
+
+    /* REVEAL ANIMATION */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* NAV */
+    .nav-wrap {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(11,11,15,0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--white-faint);
+    }
+
+    nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 64px;
+    }
+
+    .logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px;
+      letter-spacing: 0.14em;
+    }
+
+    .logo span { color: var(--blue); }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--white-dim);
+      transition: color 0.2s;
+      letter-spacing: 0.02em;
+    }
+
+    .nav-links a:hover { color: var(--white); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 2rem;
+      padding-top: 64px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
+      right: -100px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      padding: 6rem 0 6rem 2.5rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--blue-glow);
+      border: 1px solid rgba(59,130,246,0.2);
+      border-radius: 99px;
+      padding: 6px 14px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--blue-bright);
+      margin-bottom: 2rem;
+    }
+
+    .hero-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(72px, 10vw, 120px);
+      line-height: 0.88;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero-italic {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(26px, 3.5vw, 40px);
+      color: var(--white-dim);
+      display: block;
+      margin-bottom: 2rem;
+    }
+
+    .hero-desc {
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--white-dim);
+      line-height: 1.8;
+      max-width: 440px;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 11px 22px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.25s;
+      letter-spacing: 0.02em;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: #fff;
+      border: 1px solid var(--blue);
+    }
+
+    .btn-primary:hover {
+      background: #2563eb;
+      box-shadow: 0 8px 30px rgba(59,130,246,0.4);
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--white-dim);
+      border: 1px solid var(--white-faint);
+    }
+
+    .btn-outline:hover {
+      color: var(--white);
+      border-color: rgba(240,240,240,0.3);
+      background: rgba(255,255,255,0.04);
+    }
+
+    /* HERO IMAGE */
+    .hero-visual {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      min-height: 500px;
+      padding-right: 2.5rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-basketball {
+      width: 100%;
+      max-height: 480px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 80px rgba(59,130,246,0.25));
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-16px) rotate(1deg); }
+    }
+
+    /* SKILLS TICKER */
+    .ticker-section {
+      border-top: 1px solid var(--white-faint);
+      border-bottom: 1px solid var(--white-faint);
+      overflow: hidden;
+      padding: 1rem 0;
+      position: relative;
+    }
+
+    .ticker-track {
+      display: flex;
+      gap: 3rem;
+      animation: scroll 25s linear infinite;
+      width: max-content;
+    }
+
+    .ticker-track span {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 18px;
+      letter-spacing: 0.12em;
+      color: var(--white-dim);
+      white-space: nowrap;
+    }
+
+    .ticker-track span em {
+      font-style: normal;
+      color: var(--blue);
+    }
+
+    @keyframes scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* PROJECTS */
+    #projects {
+      padding: 7rem 0;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 3.5rem;
+    }
+
+    .section-head-left {
+      display: flex;
+      align-items: baseline;
+      gap: 1.25rem;
+    }
+
+    .section-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 14px;
+      color: var(--blue);
+      letter-spacing: 0.1em;
+    }
+
+    .section-label {
+      font-family: 'Playfair Display', serif;
+      font-size: 42px;
+      font-weight: 700;
+    }
+
+    .section-count {
+      font-size: 12px;
+      color: var(--white-dim);
+      letter-spacing: 0.06em;
+    }
+
+    /* FEATURED LATEST */
+    .featured-project {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 0;
+      background: var(--bg-card);
+      border: 1px solid var(--white-faint);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 20px;
+      transition: box-shadow 0.3s, transform 0.3s;
+    }
+
+    .featured-project:hover {
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+      transform: translateY(-3px);
+    }
+
+    .featured-project:hover .feat-img { transform: scale(1.03); }
+
+    .feat-img-wrap {
+      overflow: hidden;
+      position: relative;
+      min-height: 380px;
+    }
+
+    .feat-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .feat-badge {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: var(--blue);
+      color: #fff;
+      padding: 5px 12px;
+      border-radius: 3px;
+      z-index: 2;
+    }
+
+    .feat-latest {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: var(--green);
+      color: var(--bg);
+      padding: 5px 10px;
+      border-radius: 3px;
+      z-index: 2;
+    }
+
+    .feat-body {
+      padding: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .feat-date {
+      font-size: 11px;
+      color: var(--white-dim);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .feat-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 1rem;
+    }
+
+    .feat-desc {
+      font-size: 14px;
+      color: var(--white-dim);
+      line-height: 1.75;
+      margin-bottom: 1.5rem;
+    }
+
+    .feat-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 2rem;
+    }
+
+    .tag {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 3px;
+      background: var(--blue-glow);
+      color: var(--blue-bright);
+      border: 1px solid rgba(59,130,246,0.15);
+    }
+
+    .feat-btns { display: flex; gap: 8px; }
+
+    .card-btn {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 10px 16px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.02em;
+    }
+
+    .card-btn-primary {
+      background: var(--blue);
+      color: #fff;
+      border: 1px solid var(--blue);
+    }
+
+    .card-btn-primary:hover { background: #2563eb; box-shadow: 0 4px 16px rgba(59,130,246,0.35); }
+
+    .card-btn-outline {
+      background: transparent;
+      color: var(--white-dim);
+      border: 1px solid var(--white-faint);
+    }
+
+    .card-btn-outline:hover { color: var(--white); border-color: rgba(240,240,240,0.3); }
+
+    /* REST OF PROJECTS GRID */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .project-card {
+      background: var(--bg-card);
+      border: 1px solid var(--white-faint);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow 0.3s, transform 0.3s;
+    }
+
+    .project-card:hover {
+      box-shadow: 0 16px 48px rgba(0,0,0,0.35);
+      transform: translateY(-3px);
+    }
+
+    .project-card:hover .card-img { transform: scale(1.04); }
+
+    .card-img-wrap {
+      overflow: hidden;
+      position: relative;
+      height: 180px;
+    }
+
+    .card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    .card-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: var(--bg);
+      color: var(--white);
+      padding: 4px 10px;
+      border-radius: 3px;
+      z-index: 2;
+      border: 1px solid var(--white-faint);
+    }
+
+    .card-body {
+      padding: 1.35rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-date {
+      font-size: 11px;
+      color: var(--white-dim);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+
+    .card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.35;
+      margin-bottom: 0.6rem;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: var(--white-dim);
+      line-height: 1.7;
+      margin-bottom: 1.1rem;
+      flex: 1;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 1.1rem;
+    }
+
+    .card-btns { display: flex; gap: 8px; }
+
+    /* ABOUT */
+    #about {
+      padding: 7rem 0;
+      border-top: 1px solid var(--white-faint);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 240px 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .about-photo {
+      width: 100%;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--white-faint);
+      filter: grayscale(10%);
+    }
+
+    .about-bio-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 1rem;
+    }
+
+    .about-bio h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 30px;
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 1.25rem;
+    }
+
+    .about-bio p {
+      font-size: 14px;
+      color: var(--white-dim);
+      line-height: 1.8;
+      margin-bottom: 0.85rem;
+    }
+
+    .about-cta { margin-top: 1.5rem; }
+
+    .skills-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--white-dim);
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--white-faint);
+    }
+
+    .skill-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 0;
+      border-bottom: 1px solid var(--white-faint);
+    }
+
+    .skill-name { font-size: 13px; font-weight: 500; }
+
+    .skill-pills { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; }
+
+    .skill-pill {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 99px;
+      background: var(--bg-elevated);
+      color: var(--white-dim);
+      border: 1px solid var(--white-faint);
+    }
+
+    /* CONTACT */
+    #contact {
+      padding: 5rem 0;
+      border-top: 1px solid var(--white-faint);
+    }
+
+    .contact-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 3rem;
+    }
+
+    .contact-left h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 52px;
+      letter-spacing: 0.04em;
+      line-height: 1;
+      margin-bottom: 0.75rem;
+    }
+
+    .contact-left h2 span { color: var(--blue); }
+
+    .contact-left p {
+      font-size: 15px;
+      color: var(--white-dim);
+      line-height: 1.7;
+    }
+
+    .contact-links {
+      display: flex;
+      gap: 12px;
+    }
+
+    .contact-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 12px 20px;
+      border-radius: var(--radius);
+      border: 1px solid var(--white-faint);
+      color: var(--white-dim);
+      transition: all 0.2s;
+    }
+
+    .contact-chip:hover {
+      color: var(--white);
+      border-color: var(--blue);
+      background: var(--blue-glow);
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 2rem 0;
+      border-top: 1px solid var(--white-faint);
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-copy {
+      font-size: 12px;
+      color: rgba(240,240,240,0.25);
+    }
+
+    .footer-right {
+      font-size: 12px;
+      color: rgba(240,240,240,0.25);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 960px) {
+      .container { padding: 0 1.5rem; }
+      nav { padding: 0 1.5rem; }
+      .hero { grid-template-columns: 1fr; }
+      .hero-content { padding: 8rem 1.5rem 3rem; }
+      .hero-visual { display: none; }
+      .featured-project { grid-template-columns: 1fr; }
+      .feat-img-wrap { min-height: 220px; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .contact-inner { flex-direction: column; text-align: center; }
+      .contact-links { flex-wrap: wrap; justify-content: center; }
+      .footer-inner { flex-direction: column; gap: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <div class="nav-wrap">
+    <nav>
+      <div class="logo">Elijah <span>Wekstein</span></div>
+      <ul class="nav-links">
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">Open to Opportunities</div>
+      <h1>Elijah<br>Wekstein</h1>
+      <span class="hero-italic">Sports analytics from the stats up</span>
+      <p class="hero-desc">CU Boulder graduate in Business Analytics and Information Management. I build models, dashboards, and data stories that find meaning in sports data.</p>
+      <div class="hero-btns">
+        <a class="btn btn-primary" href="#projects">View Projects</a>
+        <a class="btn btn-outline" href="https://www.linkedin.com/in/elijah-wekstein" target="_blank">LinkedIn</a>
+        <a class="btn btn-outline" href="https://github.com/ewekstein" target="_blank">GitHub</a>
+        <a class="btn btn-outline" href="Elijah_Wekstein_Resume.pdf" target="_blank">Resume</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <img class="hero-basketball" src="high_tech_basketball.png" alt="Sports analytics" />
+    </div>
+  </section>
+
+  <!-- SKILLS TICKER -->
+  <div class="ticker-section">
+    <div class="ticker-track">
+      <span><em>Python</em></span>
+      <span>R</span>
+      <span><em>SQL</em></span>
+      <span>Tableau</span>
+      <span><em>ggplot2</em></span>
+      <span>matplotlib</span>
+      <span><em>Excel</em></span>
+      <span>Alteryx</span>
+      <span><em>nflfastR</em></span>
+      <span>hoopR</span>
+      <span><em>baseballr</em></span>
+      <span>StatsBomb</span>
+      <span><em>pandas</em></span>
+      <span>numpy</span>
+      <span><em>Git</em></span>
+      <span>GitHub</span>
+      <!-- DUPLICATE FOR SEAMLESS LOOP -->
+      <span><em>Python</em></span>
+      <span>R</span>
+      <span><em>SQL</em></span>
+      <span>Tableau</span>
+      <span><em>ggplot2</em></span>
+      <span>matplotlib</span>
+      <span><em>Excel</em></span>
+      <span>Alteryx</span>
+      <span><em>nflfastR</em></span>
+      <span>hoopR</span>
+      <span><em>baseballr</em></span>
+      <span>StatsBomb</span>
+      <span><em>pandas</em></span>
+      <span>numpy</span>
+      <span><em>Git</em></span>
+      <span>GitHub</span>
+    </div>
+  </div>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="section-head-left">
+          <span class="section-num">01</span>
+          <h2 class="section-label">Projects</h2>
+        </div>
+        <span class="section-count">4 Published</span>
+      </div>
+
+      <!-- FEATURED: LATEST PROJECT -->
+      <div class="featured-project reveal">
+        <div class="feat-img-wrap">
+          <img class="feat-img" src="World_Cup_Banner.jpg" alt="2022 World Cup Final" />
+          <div class="feat-badge">Soccer</div>
+          <div class="feat-latest">Latest</div>
+        </div>
+        <div class="feat-body">
+          <div class="feat-date">2022 World Cup Final</div>
+          <div class="feat-title">2022 World Cup Final: Pass Reception Heatmaps</div>
+          <div class="feat-desc">With the 2026 World Cup approaching, a look back at the greatest final in recent memory. Pass reception heatmaps from Argentina vs. France reveal two completely different tactical approaches to the same game.</div>
+          <div class="feat-tags">
+            <span class="tag">R</span>
+            <span class="tag">StatsBomb</span>
+            <span class="tag">Heatmaps</span>
+            <span class="tag">Soccer</span>
+          </div>
+          <div class="feat-btns">
+            <a class="card-btn card-btn-primary" href="https://www.linkedin.com/posts/elijahwekstein_with-the-2026-world-cup-just-around-the-corner-ugcPost-7467286138672689152-Bv81/" target="_blank">Read Article</a>
+            <a class="card-btn card-btn-outline" href="https://github.com/ewekstein/worldcup-2022-pass-maps" target="_blank">GitHub Repo</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- REMAINING PROJECTS -->
+      <div class="projects-grid">
+
+        <div class="project-card reveal">
+          <div class="card-img-wrap">
+            <img class="card-img" src="SuperBowl26Header.webp" alt="2025 NFL Season" />
+            <div class="card-badge">NFL</div>
+          </div>
+          <div class="card-body">
+            <div class="card-date">2025 Regular Season</div>
+            <div class="card-title">Breaking Down the 2025 NFL Season</div>
+            <div class="card-desc">From Drake Maye's breakout year to the Eagles' red zone dominance to why veteran quarterbacks still own the two-minute drill.</div>
+            <div class="card-tags">
+              <span class="tag">Python</span>
+              <span class="tag">EPA</span>
+              <span class="tag">nflverse</span>
+            </div>
+            <div class="card-btns">
+              <a class="card-btn card-btn-primary" href="https://www.linkedin.com/pulse/breaking-down-2025-nfl-season-efficiency-play-calling-elijah-wekstein-ehowc" target="_blank">Read Article</a>
+              <a class="card-btn card-btn-outline" href="https://github.com/ewekstein/nfl-2025-season-analysis" target="_blank">GitHub</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card reveal">
+          <div class="card-img-wrap">
+            <img class="card-img" src="CelticsFinalHeader.webp" alt="NBA Player Value" />
+            <div class="card-badge">NBA</div>
+          </div>
+          <div class="card-body">
+            <div class="card-date">2025-26 Season</div>
+            <div class="card-title">Paid to Produce: NBA Player Value vs. Salary</div>
+            <div class="card-desc">Some contracts are steals and some are liabilities. Analyzing how player performance stacks up to their contracts.</div>
+            <div class="card-tags">
+              <span class="tag">R</span>
+              <span class="tag">VORP</span>
+              <span class="tag">ggplot2</span>
+            </div>
+            <div class="card-btns">
+              <a class="card-btn card-btn-primary" href="https://www.linkedin.com/pulse/paid-produce-measuring-true-nba-player-value-against-2025-26-elijah-3nptc" target="_blank">Read Article</a>
+              <a class="card-btn card-btn-outline" href="https://github.com/ewekstein/nba-player-value-25-26" target="_blank">GitHub</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card reveal">
+          <div class="card-img-wrap">
+            <img class="card-img" src="FenwayHeader.jpeg" alt="Fenway Attendance" />
+            <div class="card-badge">MLB</div>
+          </div>
+          <div class="card-body">
+            <div class="card-date">2025 Season</div>
+            <div class="card-title">What Actually Fills Fenway: 2025 Red Sox</div>
+            <div class="card-desc">Exploring how timing, matchups, and game importance influenced fan turnout at Fenway Park.</div>
+            <div class="card-tags">
+              <span class="tag">Excel</span>
+              <span class="tag">Tableau</span>
+              <span class="tag">MLB</span>
+            </div>
+            <div class="card-btns">
+              <a class="card-btn card-btn-primary" href="https://www.linkedin.com/pulse/what-actually-fills-fenway-data-look-2025-red-sox-elijah-wekstein-hwwuc" target="_blank">Read Article</a>
+              <a class="card-btn card-btn-outline" href="https://github.com/ewekstein/fenway-attendance-2025" target="_blank">GitHub</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="section-head-left">
+          <span class="section-num">02</span>
+          <h2 class="section-label">About</h2>
+        </div>
+      </div>
+      <div class="about-grid reveal">
+        <div>
+          <img class="about-photo" src="IMG_5870.jpeg" alt="Elijah Wekstein" />
+        </div>
+        <div class="about-bio">
+          <div class="about-bio-label">Background</div>
+          <h2>Finding the story in the numbers</h2>
+          <p>I'm Elijah Wekstein, a recent graduate from CU Boulder's Leeds School of Business with a dual emphasis in Business Analytics and Information Management.</p>
+          <p>Passionate about applying quantitative methods to sports, building models and visualizations that turn raw data into real decisions. Based between Boston, MA and Boulder, CO.</p>
+          <div class="about-cta">
+            <a class="btn btn-primary" href="Elijah_Wekstein_Resume.pdf" target="_blank">View Resume</a>
+          </div>
+        </div>
+        <div>
+          <div class="skills-label">Tools and Skills</div>
+          <div class="skill-row"><span class="skill-name">Languages</span><div class="skill-pills"><span class="skill-pill">Python</span><span class="skill-pill">R</span><span class="skill-pill">SQL</span></div></div>
+          <div class="skill-row"><span class="skill-name">Visualization</span><div class="skill-pills"><span class="skill-pill">Tableau</span><span class="skill-pill">ggplot2</span><span class="skill-pill">matplotlib</span></div></div>
+          <div class="skill-row"><span class="skill-name">Analytics</span><div class="skill-pills"><span class="skill-pill">Excel</span><span class="skill-pill">Alteryx</span></div></div>
+          <div class="skill-row"><span class="skill-name">Sports Data</span><div class="skill-pills"><span class="skill-pill">nflfastR</span><span class="skill-pill">hoopR</span><span class="skill-pill">StatsBomb</span></div></div>
+          <div class="skill-row"><span class="skill-name">Python</span><div class="skill-pills"><span class="skill-pill">pandas</span><span class="skill-pill">numpy</span></div></div>
+          <div class="skill-row"><span class="skill-name">Other</span><div class="skill-pills"><span class="skill-pill">Git</span><span class="skill-pill">GitHub</span><span class="skill-pill">Salesforce</span></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="container">
+      <div class="contact-inner reveal">
+        <div class="contact-left">
+          <h2>Let's <span>Connect</span></h2>
+          <p>Always open to conversations about sports analytics, data, and new opportunities.</p>
+        </div>
+        <div class="contact-links">
+          <a class="contact-chip" href="mailto:ewekstein@gmail.com">ewekstein@gmail.com</a>
+          <a class="contact-chip" href="https://www.linkedin.com/in/elijah-wekstein" target="_blank">LinkedIn</a>
+          <a class="contact-chip" href="https://github.com/ewekstein" target="_blank">GitHub</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-copy">Elijah Wekstein - Boston, MA / Boulder, CO</div>
+        <div class="footer-right">Built with data and determination</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SCROLL REVEAL -->
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
